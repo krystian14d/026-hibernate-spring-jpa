@@ -15,7 +15,6 @@ import java.util.Objects;
 @Setter
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Book {
 
     @Id
