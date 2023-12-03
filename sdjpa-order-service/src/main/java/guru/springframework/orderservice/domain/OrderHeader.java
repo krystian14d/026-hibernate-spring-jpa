@@ -2,6 +2,7 @@ package guru.springframework.orderservice.domain;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import  jakarta.persistence.Entity;
@@ -10,11 +11,13 @@ import jakarta.persistence.Enumerated;
 import  jakarta.persistence.GeneratedValue;
 import  jakarta.persistence.GenerationType;
 import  jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by jt on 12/5/21.
@@ -64,7 +67,11 @@ public class OrderHeader extends BaseEntity{
     private Address shippingAddress;
     @Embedded
     private Address billToAddress;
-//    @Column(columnDefinition = "ENUM('NEW', 'IN_PROGRESS', 'COMPLETE')")
-//    @Enumerated(EnumType.STRING)
-//    private OrderStatus orderStatus;
+//    @Column(columnDefinition = "ENUM('NEW', 'IN_PROCESS', 'COMPLETE')")
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
+
+    @OneToMany(mappedBy = "orderHeader",
+    cascade = CascadeType.PERSIST)
+    private Set<OrderLine> orderLines;
 }
