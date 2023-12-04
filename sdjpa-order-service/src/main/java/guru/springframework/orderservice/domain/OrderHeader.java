@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -67,6 +68,7 @@ public class OrderHeader extends BaseEntity{
     private Address shippingAddress;
     @Embedded
     private Address billToAddress;
+
 //    @Column(columnDefinition = "ENUM('NEW', 'IN_PROCESS', 'COMPLETE')")
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -74,4 +76,13 @@ public class OrderHeader extends BaseEntity{
     @OneToMany(mappedBy = "orderHeader",
     cascade = CascadeType.PERSIST)
     private Set<OrderLine> orderLines;
+
+    public void addOrderLine(OrderLine orderLine){
+        if(orderLines == null){
+            orderLines = new HashSet<>();
+        }
+
+        orderLines.add(orderLine);
+        orderLine.setOrderHeader(this);
+    }
 }
