@@ -1,23 +1,11 @@
 package guru.springframework.orderservice.domain;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import  jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import  jakarta.persistence.GeneratedValue;
-import  jakarta.persistence.GenerationType;
-import  jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -61,28 +49,38 @@ import java.util.Set;
                 column = @Column(name = "bill_to_zip_code")
         )
 })
-public class OrderHeader extends BaseEntity{
+public class OrderHeader extends BaseEntity {
 
-    private String customer;
     @Embedded
     private Address shippingAddress;
     @Embedded
     private Address billToAddress;
 
-//    @Column(columnDefinition = "ENUM('NEW', 'IN_PROCESS', 'COMPLETE')")
+    //    @Column(columnDefinition = "ENUM('NEW', 'IN_PROCESS', 'COMPLETE')")
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
     @OneToMany(mappedBy = "orderHeader",
-    cascade = CascadeType.PERSIST)
+               cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     private Set<OrderLine> orderLines;
 
-    public void addOrderLine(OrderLine orderLine){
-        if(orderLines == null){
+    @ManyToOne
+    private Customer customer;
+
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, mappedBy= "orderHeader")
+    private OrderApproval orderApproval;
+
+    public void addOrderLine(OrderLine orderLine) {
+        if (orderLines == null) {
             orderLines = new HashSet<>();
         }
 
         orderLines.add(orderLine);
         orderLine.setOrderHeader(this);
+    }
+
+    public void setOrderApproval(OrderApproval orderApproval) {
+        this.orderApproval = orderApproval;
+        orderApproval.setOrderHeader(this);
     }
 }
