@@ -18,6 +18,9 @@ public class OrderLine extends BaseEntity{
     @ManyToOne
     private OrderHeader orderHeader;
 
+    @ManyToOne
+    private Product product;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

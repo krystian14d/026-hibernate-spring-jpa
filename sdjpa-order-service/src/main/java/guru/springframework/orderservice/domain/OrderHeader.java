@@ -64,7 +64,7 @@ public class OrderHeader extends BaseEntity {
                cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     private Set<OrderLine> orderLines;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Customer customer;
 
     @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, mappedBy= "orderHeader")
